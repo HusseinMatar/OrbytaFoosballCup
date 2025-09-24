@@ -1,6 +1,7 @@
 Orbyta Foosball Cup 🏆
 
 A realtime foosball tournament web app for Orbyta SRL with:
+	
 	•	Swiss-style qualifiers (1–2 rounds depending on the number of teams)
 	•	Live knockout bracket (always ends with a Final)
 	•	Balanced team generation (by role and skill)
@@ -12,6 +13,7 @@ A realtime foosball tournament web app for Orbyta SRL with:
 ⸻
 
 Table of Contents
+	
 	•	Live Demo & Repo
 	•	Features
 	•	Tournament Format
@@ -31,15 +33,19 @@ Table of Contents
 ⸻
 
 Live Demo & Repo
+	
 	•	Live Demo: https://orbyta-foosball.web.app/
 
 ⸻
 
 Features
+	
 	•	Google Sign-In (Firebase Auth)
 Required to view the tournament (the main content is hidden until login).
+	
 	•	Admin-only actions (CRUD)
 Admins must be on an allowlist in Firestore and also enter an Admin PIN in the UI. Admins can:
+	
 	•	Add players (Name; Role; Level)
 	•	Generate balanced teams
 	•	Build Swiss rounds
@@ -70,11 +76,13 @@ Admins must be on an allowlist in Firestore and also enter an Admin PIN in the U
 Tournament Format
 
 To keep it fair and fast, the app uses Swiss qualifiers followed by single-elimination:
+	
 	•	2 teams total → Direct Final.
 	•	4 or 6 teams → Swiss R1 (each team plays once) → Top-4 (Semifinals → Final).
 	•	8+ teams → Swiss R1 + Swiss R2 (each team plays twice) → Top-8 (Quarters → Semis → Final).
 
 This ensures:
+	
 	•	Everyone plays at least one (often two) matches before elimination
 	•	There is always a Final
 	•	The bracket feels competitive without being overly long
@@ -82,12 +90,16 @@ This ensures:
 ⸻
 
 How Standings Are Calculated
+	
 	•	Seed (testa di serie)
 Initial team strength. Computed from the average level of the two players. Lower seed number means stronger on paper (Seed 1 is best). Used to pair Round 1.
+	
 	•	Points
 Win = 1, Loss = 0.
+	
 	•	Buchholz
 Sum of the final points of your opponents in the Swiss rounds — a measure of schedule strength. If you faced strong teams (who also won), your Buchholz is higher.
+	
 	•	Swiss Ranking Order
 	1.	Points (desc)
 	2.	Buchholz (desc)
@@ -98,14 +110,18 @@ The top teams (Top-8 or Top-4, depending on total teams) advance to the knockout
 ⸻
 
 Roles & Access Control
+	
 	•	Viewer (logged-in user)
 Must Login with Google to view the tournament (main content hidden until authenticated). Viewers see: year, Swiss rounds, bracket, champion — live.
+	
 	•	Admin (allowlisted + PIN)
 Must:
+	
 	1.	Log in with Google
 	2.	Be listed in Firestore collection admins/{uid}
 	3.	Enter valid Admin PIN in the UI
 Only admins can modify players, generate teams, pairings, and set winners.
+	
 	•	Audit log
 Admin “enter” / “exit” is logged in adminSessions.
 
@@ -114,6 +130,7 @@ You can also enforce server-side read restrictions (see Security Rules) to requi
 ⸻
 
 Architecture
+	
 	•	Frontend:
 	•	HTML + CSS (no framework)
 	•	app.js ES module (imports Firebase SDK 10.x via CDN)
@@ -134,6 +151,7 @@ Architecture
 Data Model
 
 Collections
+
 	•	foosball/state (single document for the live tournament)
 	•	admins/{uid} (empty doc presence means allowlisted admin)
 	•	adminSessions/{autoId} (audit entries)
@@ -240,10 +258,12 @@ service cloud.firestore {
 Usage Guide
 
 As a logged-in user
+	
 	•	See the year, Gare iniziali (Swiss), Tabellone, and the Campioni banner when available.
 	•	Click the ℹ️ Come funziona button in the header to read the format rules.
 
 Admin flow (high level)
+	
 	1.	Login with Google (must be allowlisted).
 	2.	Enter the Admin PIN.
 	3.	Paste players in the format Name; Role; Level (role = Attacker/Defender, level 1–5, roles must be balanced).
@@ -274,6 +294,7 @@ firebase deploy
 ⸻
 
 Styling & UI
+	
 	•	Neon, glassy look using CSS variables and gradients.
 	•	Responsive grid-based layout.
 	•	Subtle animations for polish.
@@ -284,6 +305,7 @@ Styling & UI
 ⸻
 
 Known Limitations
+	
 	•	Player input expects balanced roles (same number of Attackers/Defenders). The app enforces this to maintain the balanced pairing logic.
 	•	Team count must be even; if there’s an odd pair count, add/remove a player to fix balance.
 	•	Currently supports Swiss R1 or Swiss R1+R2 only (by design, for time efficiency).
